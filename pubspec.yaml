@@ -1,0 +1,31 @@
+name: stegan_vault
+description: "A steganography-based password manager. Encrypts credentials and hides them inside PNG images."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.4 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+  provider: ^6.0.0
+
+  # AES-256-GCM encryption + PBKDF2 key derivation (pure Dart, no native code)
+  cryptography: ^2.7.0
+
+  # PNG pixel-level manipulation for LSB steganography (pure Dart)
+  image: ^4.3.0
+
+  # Native file open/save dialogs (Linux GTK, requires xdg-desktop-portal at runtime)
+  file_picker: ^8.0.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
