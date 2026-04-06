@@ -56,9 +56,46 @@ A 1000×1000 PNG can hide ~375 KB of encrypted data (3 bits per pixel × 1 M pix
 
 ### Prerequisites
 
-- [Flutter SDK](https://docs.flutter.dev/get-started/install) ≥ 3.3.4
-- For **Linux**: GTK development libraries and `xdg-desktop-portal` (for the file picker)
-- For **macOS**: Xcode
+#### All platforms
+
+- [Flutter SDK](https://docs.flutter.dev/get-started/install) ≥ 3.3.4 — follow the official install guide for your OS
+- [Dart SDK](https://dart.dev/get-dart) ≥ 3.3.4 — bundled with Flutter, no separate install needed
+- [Git](https://git-scm.com/downloads)
+
+#### Linux
+
+- **Clang / CMake / Ninja** — required by the Flutter Linux toolchain:
+  ```bash
+  sudo apt-get install clang cmake ninja-build
+  ```
+- **GTK 3 development libraries** — used by the file picker and Flutter's window system:
+  ```bash
+  sudo apt-get install libgtk-3-dev pkg-config liblzma-dev
+  ```
+- **xdg-desktop-portal** — enables the native file open/save dialog at runtime:
+  ```bash
+  sudo apt-get install xdg-desktop-portal
+  ```
+  On GNOME you also need `xdg-desktop-portal-gnome`; on KDE, `xdg-desktop-portal-kde`.
+- Verify your setup: `flutter doctor -v`
+
+#### macOS
+
+- [Xcode](https://developer.apple.com/xcode/) ≥ 14 (install from the Mac App Store)
+- Xcode command-line tools:
+  ```bash
+  xcode-select --install
+  ```
+- [CocoaPods](https://cocoapods.org/) — required for Flutter plugin dependencies:
+  ```bash
+  sudo gem install cocoapods
+  ```
+- Verify your setup: `flutter doctor -v`
+
+#### Windows
+
+- [Visual Studio 2022](https://visualstudio.microsoft.com/) with the **Desktop development with C++** workload selected during installation
+- Verify your setup: `flutter doctor -v`
 
 ### Clone and run
 
