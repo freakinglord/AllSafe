@@ -14,6 +14,7 @@ class VaultState extends ChangeNotifier {
   String? _error;
   bool _isDirty = false;
   bool _isSaving = false;
+  bool _isDark = true;
 
   // ── Getters ──────────────────────────────────────────────────────────────
 
@@ -24,6 +25,12 @@ class VaultState extends ChangeNotifier {
   List<Account> get accounts => _vault.accounts;
   String? get error => _error;
   bool get isDirty => _isDirty;
+  bool get isDark => _isDark;
+
+  void toggleTheme() {
+    _isDark = !_isDark;
+    notifyListeners();
+  }
 
   /// Path to the current vault PNG on disk. Null if vault was just created
   /// and has never been saved.

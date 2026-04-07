@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../state/vault_state.dart';
 import 'unlock_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -8,7 +10,17 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.select<VaultState, bool>((s) => s.isDark);
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            tooltip: isDark ? 'Switch to light theme' : 'Switch to dark theme',
+            icon: Icon(isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined),
+            onPressed: () => context.read<VaultState>().toggleTheme(),
+          ),
+        ],
+      ),
       body: Center(
         child: SizedBox(
           width: 380,
@@ -29,11 +41,11 @@ class HomeScreen extends StatelessWidget {
                     ),
               ),
               const SizedBox(height: 6),
-              const Text(
+              Text(
                 'ENCRYPT · HIDE · RETRIEVE',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Color(0xFF333333),
+                  color: Theme.of(context).colorScheme.onSurface.withAlpha(100),
                   fontSize: 11,
                   letterSpacing: 3,
                 ),
@@ -54,12 +66,12 @@ class HomeScreen extends StatelessWidget {
               ),
 
               const SizedBox(height: 52),
-              const Text(
+              Text(
                 'Passwords are encrypted with AES-256-GCM\n'
                 'and hidden inside PNG images using steganography.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Color(0xFF2A2A2A),
+                  color: Theme.of(context).colorScheme.onSurface.withAlpha(100),
                   fontSize: 11,
                   height: 1.7,
                 ),

@@ -216,3 +216,5 @@ const textMuted = Color(0xFF4A6A8A);
 - [ ] Add import/export feature
 - [ ] Add checkboxes to what kind of password to generate (e.g. weird characters, only alphanumeric, length)
 - [ ] Add alert if password is re-used in other accounts
+- [ ] Allow users to change theme between light and dark through the whole interface
+- [ ] If user wants to create a new vault on an existing vault image, it should detect the current image is already a vault and give warning before user attempt to overwrite it. 
