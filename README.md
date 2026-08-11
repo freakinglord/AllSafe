@@ -35,7 +35,7 @@ Your accounts (JSON)
 
 A 1000×1000 PNG can hide ~375 KB of encrypted data (3 bits per pixel × 1 M pixels ÷ 8).
 
-> **Note:** Steganography adds obscurity, not cryptographic security. The actual protection comes from AES-256-GCM. Keep your master password strong.
+> **Note:** Steganography adds obscurity, not cryptographic security. The actual protection comes from AES-256-GCM. Keep your master password strong. And yes — the name's a nod to Gideon's company. Let's hope this vault holds up better than his did.
 
 ---
 
@@ -100,8 +100,8 @@ A 1000×1000 PNG can hide ~375 KB of encrypted data (3 bits per pixel × 1 M pix
 ### Clone and run
 
 ```bash
-git clone https://github.com/your-username/new-password-manager.git
-cd new-password-manager
+git clone https://github.com/freakinglord/AllSafe.git
+cd AllSafe
 flutter pub get
 flutter run -d linux     # or -d macos / -d windows
 ```
