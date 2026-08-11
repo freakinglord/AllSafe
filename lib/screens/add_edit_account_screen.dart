@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/account.dart';
-import '../state/vault_state.dart';
+import '../state/safe_state.dart';
 import '../widgets/password_field.dart';
 
 class AddEditAccountScreen extends StatefulWidget {
@@ -146,7 +146,7 @@ class _AddEditAccountScreenState extends State<AddEditAccountScreen> {
   void _save() {
     if (!_formKey.currentState!.validate()) return;
 
-    final state = context.read<VaultState>();
+    final state = context.read<SafeState>();
 
     if (_isEdit) {
       final updated = widget.account!.copyWith(

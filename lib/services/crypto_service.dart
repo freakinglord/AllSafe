@@ -7,7 +7,7 @@ import 'package:cryptography/cryptography.dart';
 class WrongPasswordException implements Exception {
   @override
   String toString() =>
-      'Incorrect master password or corrupted vault data.';
+      'Incorrect master password or corrupted safe data.';
 }
 
 class CryptoService {

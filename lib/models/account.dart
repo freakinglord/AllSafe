@@ -69,15 +69,15 @@ class Account {
       };
 }
 
-class Vault {
+class Safe {
   final List<Account> accounts;
 
-  const Vault({this.accounts = const []});
+  const Safe({this.accounts = const []});
 
-  Vault copyWith({List<Account>? accounts}) =>
-      Vault(accounts: accounts ?? this.accounts);
+  Safe copyWith({List<Account>? accounts}) =>
+      Safe(accounts: accounts ?? this.accounts);
 
-  factory Vault.fromJson(Map<String, dynamic> json) => Vault(
+  factory Safe.fromJson(Map<String, dynamic> json) => Safe(
         accounts: (json['accounts'] as List<dynamic>)
             .map((e) => Account.fromJson(e as Map<String, dynamic>))
             .toList(),
@@ -89,6 +89,6 @@ class Vault {
 
   String serialize() => jsonEncode(toJson());
 
-  static Vault deserialize(String data) =>
-      Vault.fromJson(jsonDecode(data) as Map<String, dynamic>);
+  static Safe deserialize(String data) =>
+      Safe.fromJson(jsonDecode(data) as Map<String, dynamic>);
 }

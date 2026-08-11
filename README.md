@@ -1,6 +1,6 @@
-# Stegan Vault
+# AllSafe
 
-A steganography-based password manager inspired by *Mr. Robot* — your credentials are AES-256-GCM encrypted and hidden inside an ordinary PNG image using LSB steganography. To anyone who doesn't know the image is a vault, it looks like a normal picture.
+A steganography-based password manager inspired by *Mr. Robot* — your credentials are AES-256-GCM encrypted and hidden inside an ordinary PNG image using LSB steganography. To anyone who doesn't know the image is a safe, it looks like a normal picture.
 
 ---
 
@@ -19,10 +19,10 @@ Your accounts (JSON)
   LSB steganography  ──►  Each bit written to the least-significant bit of R/G/B channels
         │
         ▼
-  Ordinary-looking PNG  (your vault)
+  Ordinary-looking PNG  (your safe)
 ```
 
-**Opening a vault** reverses the process: extract LSBs → decrypt blob → parse JSON accounts.
+**Opening a safe** reverses the process: extract LSBs → decrypt blob → parse JSON accounts.
 
 ### Security properties
 
@@ -30,24 +30,24 @@ Your accounts (JSON)
 |---|---|---|
 | Encryption | AES-256-GCM | Confidentiality + integrity (wrong password = auth tag failure, not garbled data) |
 | Key derivation | PBKDF2-SHA256, 100 000 iterations | Brute-force resistance |
-| Steganography | 1-bit LSB per R/G/B channel | Obscurity — the vault looks like a photo |
+| Steganography | 1-bit LSB per R/G/B channel | Obscurity — the safe looks like a photo |
 | Salt & nonce | 16-byte salt, 12-byte nonce (random per save) | Prevents rainbow tables and nonce reuse |
 
 A 1000×1000 PNG can hide ~375 KB of encrypted data (3 bits per pixel × 1 M pixels ÷ 8).
 
-> **Note:** Steganography adds obscurity, not cryptographic security. The actual protection comes from AES-256-GCM. Keep your master password strong. And yes — the name's a nod to Gideon's company. Let's hope this vault holds up better than his did.
+> **Note:** Steganography adds obscurity, not cryptographic security. The actual protection comes from AES-256-GCM. Keep your master password strong. And yes — the name's a nod to Gideon's company. Let's hope this safe holds up better than his did.
 
 ---
 
 ## Features
 
-- Create a vault from any PNG image as the cover
+- Create a safe from any PNG image as the cover
 - Add, edit, and delete accounts (name, email, username, password, notes)
 - Strong password generator (24-character, cryptographically random)
 - Reveal/hide password toggle in account detail view
 - One-tap copy to clipboard for any field
 - Save indicator — orange dot when there are unsaved changes
-- Lock vault — clears all credentials from memory
+- Lock safe — clears all credentials from memory
 - Search accounts by name, email, or username
 
 ---
@@ -92,6 +92,8 @@ A 1000×1000 PNG can hide ~375 KB of encrypted data (3 bits per pixel × 1 M pix
   ```
 - Verify your setup: `flutter doctor -v`
 
+> **Note:** Try running in VSCode if unable to run flutter in terminal and verified that is installed.
+
 #### Windows
 
 - [Visual Studio 2022](https://visualstudio.microsoft.com/) with the **Desktop development with C++** workload selected during installation
@@ -120,10 +122,10 @@ flutter build macos
 
 ## Usage
 
-1. **Create a vault** — pick any PNG as your cover image, set a master password. The app creates an in-memory vault bound to that image.
+1. **Create a safe** — pick any PNG as your cover image, set a master password. The app creates an in-memory safe bound to that image.
 2. **Add accounts** — tap the `+` button, fill in the details, optionally generate a strong password.
-3. **Save** — tap the save icon. For a new vault you choose where to write the output PNG. For an existing vault it overwrites in place.
-4. **Open a vault** — select the stego PNG, enter your master password.
+3. **Save** — tap the save icon. For a new safe you choose where to write the output PNG. For an existing safe it overwrites in place.
+4. **Open a safe** — select the stego PNG, enter your master password.
 5. **Lock** — clears all data from memory. The PNG on disk is your only persistent record.
 
 ---
@@ -132,19 +134,19 @@ flutter build macos
 
 ```
 lib/
-├── main.dart                      # App entry point, dark theme
+├── main.dart                      # App entry point, light + dark themes
 ├── models/
-│   └── account.dart               # Account and Vault data models
+│   └── account.dart               # Account and Safe data models
 ├── services/
 │   ├── crypto_service.dart        # AES-256-GCM + PBKDF2
 │   ├── steganography_service.dart # LSB embed / extract
-│   └── vault_service.dart         # Orchestration (load / save vault)
+│   └── safe_service.dart          # Orchestration (load / save safe)
 ├── state/
-│   └── vault_state.dart           # ChangeNotifier state management
+│   └── safe_state.dart            # ChangeNotifier state management
 ├── widgets/
 │   └── password_field.dart        # Reusable show/hide password field
 └── screens/
-    ├── home_screen.dart            # Open or create vault
+    ├── home_screen.dart            # Open or create safe
     ├── unlock_screen.dart          # Password entry + key derivation
     ├── account_list_screen.dart    # Searchable account list
     ├── account_detail_screen.dart  # View, copy, reveal, edit, delete
@@ -157,36 +159,34 @@ lib/
 
 ### Changing the color scheme
 
-All theme colors are defined as six constants at the top of `_buildTheme()` in `lib/main.dart`:
+Colors are defined as six constants at the top of `_buildLightTheme()` and `_buildDarkTheme()` in `lib/main.dart`. Changing them updates every AppBar, button, input, FAB, dialog, snackbar, and list tile automatically.
 
+**Light theme**
 ```dart
-const green = Color(0xFF00FF41);       // accent / primary — buttons, focus rings, icons
-const bg = Color(0xFF0A0A0A);          // scaffold background
-const surface = Color(0xFF141414);     // cards, input fill, password generator button
-const border = Color(0xFF2A2A2A);      // borders and dividers
-const textPrimary = Color(0xFFE0E0E0); // main body text
-const textMuted = Color(0xFF555555);   // labels, icons, subtitles
+const blue = Color(0xFF2B4D8C);    // primary — buttons, focus rings, icons
+const bg = Color(0xFFF0F0F0);      // scaffold background
+const surface = Color(0xFFFFFFFF); // cards, input fill
+const border = Color(0xFFDDDDDD);  // borders and dividers
+const textPrimary = Color(0xFF0D0D0D);
+const textMuted = Color(0xFF666666);
 ```
 
-Changing these six values updates every AppBar, button, input field, FAB, dialog, snackbar, and list tile automatically.
+**Dark theme**
+```dart
+const blue = Color(0xFF4A79C4);    // AllSafe blue
+const bg = Color(0xFF0D1117);      // dark navy
+const surface = Color(0xFF161C24); // card surfaces
+const border = Color(0xFF20293A);  // dividers / borders
+const textPrimary = Color(0xFFE8EEF6);
+const textMuted = Color(0xFF6B7A8D);
+```
 
-Two additional colors are hardcoded outside that block:
+Two additional colors are hardcoded outside those blocks:
 
 | Color | Hex | Location |
 |---|---|---|
-| Error / delete red | `0xFFFF4444` | `main.dart` error borders, delete button in `account_detail_screen.dart` |
+| Error / delete red | `0xFFFF453A` | `main.dart` error borders, delete button in `account_detail_screen.dart` |
 | Unsaved-changes dot | `0xFFFF8800` | `account_list_screen.dart` dirty indicator |
-
-#### Example — blue cyberpunk theme
-
-```dart
-const green = Color(0xFF00CFFF);   // cyan-blue accent
-const bg = Color(0xFF080C14);      // very dark navy
-const surface = Color(0xFF0D1520); // dark blue surface
-const border = Color(0xFF1A2840);  // subtle blue border
-const textPrimary = Color(0xFFCFE2FF);
-const textMuted = Color(0xFF4A6A8A);
-```
 
 ---
 
@@ -216,5 +216,5 @@ const textMuted = Color(0xFF4A6A8A);
 - [ ] Add import/export feature
 - [ ] Add checkboxes to what kind of password to generate (e.g. weird characters, only alphanumeric, length)
 - [ ] Add alert if password is re-used in other accounts
-- [ ] Allow users to change theme between light and dark through the whole interface
-- [ ] If user wants to create a new vault on an existing vault image, it should detect the current image is already a vault and give warning before user attempt to overwrite it. 
+- [x] Allow users to change theme between light and dark through the whole interface
+- [ ] If user wants to create a new safe on an existing safe image, it should detect the current image is already a safe and give warning before user attempt to overwrite it. 

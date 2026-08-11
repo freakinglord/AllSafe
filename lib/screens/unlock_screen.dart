@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../state/vault_state.dart';
+import '../state/safe_state.dart';
 import '../widgets/password_field.dart';
 import 'account_list_screen.dart';
 
@@ -40,11 +40,11 @@ class _UnlockScreenState extends State<UnlockScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final error = context.select<VaultState, String?>((s) => s.error);
+    final error = context.select<SafeState, String?>((s) => s.error);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isCreate ? 'CREATE VAULT' : 'OPEN VAULT'),
+        title: Text(_isCreate ? 'CREATE SAFE' : 'OPEN SAFE'),
         leading: const BackButton(),
       ),
       body: Center(
@@ -69,7 +69,7 @@ class _UnlockScreenState extends State<UnlockScreen> {
                     child: Row(
                       children: [
                         const Icon(Icons.image_outlined,
-                            color: Color(0xFF00FF41), size: 15),
+                            color: Color(0xFF4A79C4), size: 15),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
@@ -143,7 +143,7 @@ class _UnlockScreenState extends State<UnlockScreen> {
                 else
                   ElevatedButton(
                     onPressed: _submit,
-                    child: Text(_isCreate ? 'CREATE VAULT' : 'UNLOCK'),
+                    child: Text(_isCreate ? 'CREATE SAFE' : 'UNLOCK'),
                   ),
               ],
             ),
@@ -157,15 +157,15 @@ class _UnlockScreenState extends State<UnlockScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isWorking = true);
-    final state = context.read<VaultState>()..clearError();
+    final state = context.read<SafeState>()..clearError();
 
     bool success;
 
     if (_isCreate) {
-      state.createVault(widget.imageBytes, _passwordCtrl.text);
+      state.createSafe(widget.imageBytes, _passwordCtrl.text);
       success = true;
     } else {
-      await state.openVault(
+      await state.openSafe(
         widget.imagePath ?? '',
         widget.imageBytes,
         _passwordCtrl.text,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../models/account.dart';
-import '../state/vault_state.dart';
+import '../state/safe_state.dart';
 import 'add_edit_account_screen.dart';
 
 class AccountDetailScreen extends StatefulWidget {
@@ -21,7 +21,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
   Widget build(BuildContext context) {
     // Reactively read the account from state so edits are reflected immediately
     final account = context
-        .watch<VaultState>()
+        .watch<SafeState>()
         .accounts
         .where((a) => a.id == widget.accountId)
         .firstOrNull;
@@ -110,7 +110,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
       ),
     );
     if (confirmed == true && context.mounted) {
-      context.read<VaultState>().deleteAccount(account.id);
+      context.read<SafeState>().deleteAccount(account.id);
       Navigator.pop(context);
     }
   }

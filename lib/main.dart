@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'state/vault_state.dart';
+import 'state/safe_state.dart';
 import 'screens/home_screen.dart';
 
 void main() {
   runApp(
     ChangeNotifierProvider(
-      create: (_) => VaultState(),
-      child: const SteganVaultApp(),
+      create: (_) => SafeState(),
+      child: const AllSafeApp(),
     ),
   );
 }
 
-class SteganVaultApp extends StatelessWidget {
-  const SteganVaultApp({super.key});
+class AllSafeApp extends StatelessWidget {
+  const AllSafeApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final isDark = context.select<VaultState, bool>((s) => s.isDark);
+    final isDark = context.select<SafeState, bool>((s) => s.isDark);
     return MaterialApp(
-      title: 'Stegan Vault',
+      title: 'AllSafe',
       debugShowCheckedModeBanner: false,
       theme: _buildLightTheme(),
       darkTheme: _buildDarkTheme(),
@@ -29,18 +29,18 @@ class SteganVaultApp extends StatelessWidget {
   }
 
   ThemeData _buildLightTheme() {
-    const green = Color(0xFF0B9732);
-    const bg = Color(0xFFF2F2F7);
+    const blue = Color(0xFF2B4D8C);
+    const bg = Color(0xFFF0F0F0);
     const surface = Color(0xFFFFFFFF);
-    const border = Color(0xFFD1D1D6);
-    const textPrimary = Color(0xFF1C1C1E);
-    const textMuted = Color(0xFF6C6C70);
+    const border = Color(0xFFDDDDDD);
+    const textPrimary = Color(0xFF0D0D0D);
+    const textMuted = Color(0xFF666666);
 
     return ThemeData(
       brightness: Brightness.light,
       scaffoldBackgroundColor: bg,
       colorScheme: const ColorScheme.light(
-        primary: green,
+        primary: blue,
         surface: surface,
         onSurface: textPrimary,
         onPrimary: Colors.white,
@@ -59,7 +59,7 @@ class SteganVaultApp extends StatelessWidget {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: green,
+          backgroundColor: blue,
           foregroundColor: Colors.white,
           minimumSize: const Size.fromHeight(48),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -72,8 +72,8 @@ class SteganVaultApp extends StatelessWidget {
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          foregroundColor: green,
-          side: const BorderSide(color: green),
+          foregroundColor: blue,
+          side: const BorderSide(color: blue),
           minimumSize: const Size.fromHeight(48),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           textStyle: const TextStyle(
@@ -85,7 +85,7 @@ class SteganVaultApp extends StatelessWidget {
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: green,
+          foregroundColor: blue,
           textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
         ),
       ),
@@ -102,7 +102,7 @@ class SteganVaultApp extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: green, width: 1.5),
+          borderSide: const BorderSide(color: blue, width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
@@ -119,7 +119,7 @@ class SteganVaultApp extends StatelessWidget {
             const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
-        backgroundColor: green,
+        backgroundColor: blue,
         foregroundColor: Colors.white,
         elevation: 2,
         shape: RoundedRectangleBorder(
@@ -153,7 +153,7 @@ class SteganVaultApp extends StatelessWidget {
         contentTextStyle:
             const TextStyle(color: textMuted, fontSize: 14, height: 1.5),
       ),
-      progressIndicatorTheme: const ProgressIndicatorThemeData(color: green),
+      progressIndicatorTheme: const ProgressIndicatorThemeData(color: blue),
       iconTheme: const IconThemeData(color: textMuted, size: 20),
       textTheme: const TextTheme(
         bodyLarge: TextStyle(color: textPrimary, fontSize: 16, height: 1.5),
@@ -180,18 +180,18 @@ class SteganVaultApp extends StatelessWidget {
   }
 
   ThemeData _buildDarkTheme() {
-    const green = Color(0xFF0B9732);   // accent / primary
-    const bg = Color(0xFF1C1C1E);      // scaffold background
-    const surface = Color(0xFF2A2A2E); // cards, input fields
-    const border = Color(0xFF3A3A3E);  // borders and dividers
-    const textPrimary = Color(0xFFF2F2F7); // main text — near white, easy on eyes
-    const textMuted = Color(0xFF8E8E93);   // labels, hints, subtitles — readable gray
+    const blue = Color(0xFF4A79C4);    // AllSafe blue
+    const bg = Color(0xFF0D1117);      // dark navy
+    const surface = Color(0xFF161C24); // card surfaces
+    const border = Color(0xFF20293A);  // dividers / borders
+    const textPrimary = Color(0xFFE8EEF6); // primary text
+    const textMuted = Color(0xFF6B7A8D);   // muted text
 
     return ThemeData(
       brightness: Brightness.dark,
       scaffoldBackgroundColor: bg,
       colorScheme: const ColorScheme.dark(
-        primary: green,
+        primary: blue,
         surface: surface,
         onSurface: textPrimary,
         onPrimary: Colors.white,
@@ -213,10 +213,10 @@ class SteganVaultApp extends StatelessWidget {
         iconTheme: IconThemeData(color: textMuted),
       ),
 
-      // ElevatedButton — filled green
+      // ElevatedButton — filled blue
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: green,
+          backgroundColor: blue,
           foregroundColor: Colors.white,
           minimumSize: const Size.fromHeight(48),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -231,8 +231,8 @@ class SteganVaultApp extends StatelessWidget {
       // OutlinedButton
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          foregroundColor: green,
-          side: const BorderSide(color: green),
+          foregroundColor: blue,
+          side: const BorderSide(color: blue),
           minimumSize: const Size.fromHeight(48),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           textStyle: const TextStyle(
@@ -246,7 +246,7 @@ class SteganVaultApp extends StatelessWidget {
       // TextButton
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: green,
+          foregroundColor: blue,
           textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
         ),
       ),
@@ -265,7 +265,7 @@ class SteganVaultApp extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: green, width: 1.5),
+          borderSide: const BorderSide(color: blue, width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
@@ -284,7 +284,7 @@ class SteganVaultApp extends StatelessWidget {
 
       // FAB
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
-        backgroundColor: green,
+        backgroundColor: blue,
         foregroundColor: Colors.white,
         elevation: 2,
         shape: RoundedRectangleBorder(
@@ -306,7 +306,7 @@ class SteganVaultApp extends StatelessWidget {
 
       // SnackBar
       snackBarTheme: const SnackBarThemeData(
-        backgroundColor: Color(0xFF3A3A3E),
+        backgroundColor: Color(0xFF1A2233),
         contentTextStyle: TextStyle(color: textPrimary, fontSize: 14),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
@@ -328,7 +328,7 @@ class SteganVaultApp extends StatelessWidget {
       ),
 
       // ProgressIndicator
-      progressIndicatorTheme: const ProgressIndicatorThemeData(color: green),
+      progressIndicatorTheme: const ProgressIndicatorThemeData(color: blue),
 
       // Icon
       iconTheme: const IconThemeData(color: textMuted, size: 20),

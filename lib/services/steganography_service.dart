@@ -48,7 +48,7 @@ class SteganographyService {
     if (bitsNeeded > pixelsAvailable * 3) {
       final minPixels = (bitsNeeded / 3).ceil();
       throw SteganographyException(
-        'Image is too small to hold the vault.\n'
+        'Image is too small to hold the safe.\n'
         'Required: $minPixels pixels (${fullData.length} bytes).\n'
         'Available: $pixelsAvailable pixels '
         '(${pixelsAvailable * 3 ~/ 8} bytes capacity).\n'
@@ -83,7 +83,7 @@ class SteganographyService {
   }
 
   /// Extracts a hidden payload from [pngBytes].
-  /// Throws [SteganographyException] if no vault is found.
+  /// Throws [SteganographyException] if no safe is found.
   static Uint8List extract(Uint8List pngBytes) {
     _rejectJpeg(pngBytes);
 
@@ -128,7 +128,7 @@ class SteganographyService {
               extracted[8];
           if (payloadLength <= 0 || payloadLength > 50 * 1024 * 1024) {
             throw const SteganographyException(
-                'Corrupt or invalid vault data detected in this image.');
+                'Corrupt or invalid safe data detected in this image.');
           }
         }
 
@@ -141,8 +141,8 @@ class SteganographyService {
 
     if (payloadLength == null) {
       throw const SteganographyException(
-        'No vault found in this image.\n'
-        'Make sure you selected the correct PNG file that contains a vault.',
+        'No safe found in this image.\n'
+        'Make sure you selected the correct PNG file that contains a safe.',
       );
     }
 
@@ -176,14 +176,14 @@ class SteganographyService {
     for (int i = 0; i < _magic.length; i++) {
       if (bytes[i] != _magic[i]) {
         throw const SteganographyException(
-          'This image does not contain a vault.\n'
+          'This image does not contain a safe.\n'
           'No hidden data signature was found.',
         );
       }
     }
     if (bytes[4] != _version) {
       throw SteganographyException(
-        'Unsupported vault format version: ${bytes[4]}. '
+        'Unsupported safe format version: ${bytes[4]}. '
         'Please update the app.',
       );
     }

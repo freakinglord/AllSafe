@@ -2,7 +2,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/account.dart';
-import '../state/vault_state.dart';
+import '../state/safe_state.dart';
 import 'account_detail_screen.dart';
 import 'add_edit_account_screen.dart';
 
@@ -32,7 +32,7 @@ class _AccountListScreenState extends State<AccountListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<VaultState>();
+    final state = context.watch<SafeState>();
 
     final accounts = state.accounts
         .where((a) =>
@@ -49,7 +49,7 @@ class _AccountListScreenState extends State<AccountListScreen> {
           children: [
             const Icon(Icons.shield_outlined, size: 16),
             const SizedBox(width: 8),
-            const Text('VAULT'),
+            const Text('SAFE'),
             if (state.isDirty)
               const Padding(
                 padding: EdgeInsets.only(left: 6),
@@ -73,16 +73,16 @@ class _AccountListScreenState extends State<AccountListScreen> {
               icon: Icon(
                 Icons.save_outlined,
                 color: state.isDirty
-                    ? const Color(0xFF00FF41)
+                    ? const Color(0xFF4A79C4)
                     : const Color(0xFF333333),
               ),
-              tooltip: 'Save Vault',
-              onPressed: state.isDirty ? () => _saveVault(context) : null,
+              tooltip: 'Save Safe',
+              onPressed: state.isDirty ? () => _saveSafe(context) : null,
             ),
           IconButton(
             icon: const Icon(Icons.lock_outlined),
-            tooltip: 'Lock Vault',
-            onPressed: () => _lockVault(context),
+            tooltip: 'Lock Safe',
+            onPressed: () => _lockSafe(context),
           ),
         ],
       ),
@@ -123,7 +123,7 @@ class _AccountListScreenState extends State<AccountListScreen> {
     );
   }
 
-  Widget _buildEmptyState(VaultState state) {
+  Widget _buildEmptyState(SafeState state) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -138,7 +138,7 @@ class _AccountListScreenState extends State<AccountListScreen> {
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 32),
               child: Text(
-                'Add accounts, then save the vault image.',
+                'Add accounts, then save the safe image.',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Color(0xFF333333), fontSize: 12),
               ),
@@ -148,14 +148,14 @@ class _AccountListScreenState extends State<AccountListScreen> {
     );
   }
 
-  Future<void> _saveVault(BuildContext context) async {
-    final state = context.read<VaultState>();
+  Future<void> _saveSafe(BuildContext context) async {
+    final state = context.read<SafeState>();
 
     if (state.needsSavePath) {
-      // New vault — ask where to save the stego image
+      // New safe — ask where to save the stego image
       String? savePath = await FilePicker.platform.saveFile(
-        dialogTitle: 'Save Vault Image As',
-        fileName: 'vault.png',
+        dialogTitle: 'Save Safe Image As',
+        fileName: 'safe.png',
         type: FileType.custom,
         allowedExtensions: ['png'],
       );
@@ -164,23 +164,23 @@ class _AccountListScreenState extends State<AccountListScreen> {
 
       final ok = await state.saveToPath(savePath);
       if (!context.mounted) return;
-      _snack(context, ok ? 'Vault saved to $savePath' : state.error ?? 'Save failed', ok);
+      _snack(context, ok ? 'Safe saved to $savePath' : state.error ?? 'Save failed', ok);
     } else {
-      final ok = await state.saveVault();
+      final ok = await state.saveSafe();
       if (!context.mounted) return;
-      _snack(context, ok ? 'Vault saved' : state.error ?? 'Save failed', ok);
+      _snack(context, ok ? 'Safe saved' : state.error ?? 'Save failed', ok);
     }
   }
 
-  Future<void> _lockVault(BuildContext context) async {
-    final state = context.read<VaultState>();
+  Future<void> _lockSafe(BuildContext context) async {
+    final state = context.read<SafeState>();
     if (state.isDirty) {
       final confirm = await showDialog<bool>(
         context: context,
         builder: (ctx) => AlertDialog(
           title: const Text('Unsaved Changes'),
           content: const Text(
-              'You have unsaved changes. Lock the vault and discard them?'),
+              'You have unsaved changes. Lock the safe and discard them?'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx, false),
@@ -198,7 +198,7 @@ class _AccountListScreenState extends State<AccountListScreen> {
       );
       if (confirm != true) return;
     }
-    state.lockVault();
+    state.lockSafe();
     if (!context.mounted) return;
     // Pop back to HomeScreen (the first route on the stack)
     Navigator.of(context).popUntil((route) => route.isFirst);
@@ -229,7 +229,7 @@ class _AccountTile extends StatelessWidget {
         child: Text(
           initial,
           style: const TextStyle(
-            color: Color(0xFF00FF41),
+            color: Color(0xFF4A79C4),
             fontWeight: FontWeight.bold,
             fontSize: 14,
           ),

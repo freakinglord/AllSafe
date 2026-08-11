@@ -1,4 +1,4 @@
-name: stegan_vault
+name: allsafe
 description: "A steganography-based password manager. Encrypts credentials and hides them inside PNG images."
 publish_to: 'none'
 
