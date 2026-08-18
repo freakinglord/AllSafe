@@ -213,8 +213,5 @@ Two additional colors are hardcoded outside those blocks:
 
 
 ## To Do
-- [ ] Add import/export feature
-- [ ] Add checkboxes to what kind of password to generate (e.g. weird characters, only alphanumeric, length)
-- [ ] Add alert if password is re-used in other accounts
-- [x] Allow users to change theme between light and dark through the whole interface
-- [ ] If user wants to create a new safe on an existing safe image, it should detect the current image is already a safe and give warning before user attempt to overwrite it. 
+
+See [todo.md](todo.md).
