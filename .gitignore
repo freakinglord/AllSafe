@@ -10,6 +10,7 @@
 .svn/
 migrate_working_dir/
 CLAUDE.md
+.claude
 
 # IntelliJ related
 *.iml

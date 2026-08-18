@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class Account {
   final String id;
   final String name;
@@ -67,28 +65,4 @@ class Account {
         'password': password,
         'notes': notes,
       };
-}
-
-class Safe {
-  final List<Account> accounts;
-
-  const Safe({this.accounts = const []});
-
-  Safe copyWith({List<Account>? accounts}) =>
-      Safe(accounts: accounts ?? this.accounts);
-
-  factory Safe.fromJson(Map<String, dynamic> json) => Safe(
-        accounts: (json['accounts'] as List<dynamic>)
-            .map((e) => Account.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      );
-
-  Map<String, dynamic> toJson() => {
-        'accounts': accounts.map((a) => a.toJson()).toList(),
-      };
-
-  String serialize() => jsonEncode(toJson());
-
-  static Safe deserialize(String data) =>
-      Safe.fromJson(jsonDecode(data) as Map<String, dynamic>);
 }

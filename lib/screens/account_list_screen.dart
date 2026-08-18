@@ -166,7 +166,7 @@ class _AccountListScreenState extends State<AccountListScreen> {
       if (!context.mounted) return;
       _snack(context, ok ? 'Safe saved to $savePath' : state.error ?? 'Save failed', ok);
     } else {
-      final ok = await state.saveSafe();
+      final ok = await state.saveToPath(state.imagePath!);
       if (!context.mounted) return;
       _snack(context, ok ? 'Safe saved' : state.error ?? 'Save failed', ok);
     }

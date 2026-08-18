@@ -1,13 +1,15 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import '../models/account.dart';
-import '../services/safe_service.dart';
+import '../services/crypto_service.dart';
+import '../services/steganography_service.dart';
 
 enum SafeStatus { locked, unlocking, unlocked }
 
 class SafeState extends ChangeNotifier {
   SafeStatus _status = SafeStatus.locked;
-  Safe _safe = const Safe();
+  List<Account> _accounts = const [];
   String? _imagePath;
   Uint8List? _imageBytes;
   String? _masterPassword;
@@ -20,7 +22,7 @@ class SafeState extends ChangeNotifier {
   bool get isUnlocked => _status == SafeStatus.unlocked;
   bool get isLoading => _status == SafeStatus.unlocking;
   bool get isSaving => _isSaving;
-  List<Account> get accounts => _safe.accounts;
+  List<Account> get accounts => _accounts;
   String? get error => _error;
   bool get isDirty => _isDirty;
   bool get isDark => _isDark;
@@ -40,8 +42,12 @@ class SafeState extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final safe = await SafeService.loadSafe(imageBytes, password);
-      _safe = safe;
+      final encryptedPayload = SteganographyService.extract(imageBytes);
+      final plaintext = await CryptoService.decrypt(encryptedPayload, password);
+      final json = jsonDecode(utf8.decode(plaintext)) as Map<String, dynamic>;
+      _accounts = (json['accounts'] as List<dynamic>)
+          .map((e) => Account.fromJson(e as Map<String, dynamic>))
+          .toList();
       _imagePath = imagePath;
       _imageBytes = imageBytes;
       _masterPassword = password;
@@ -56,7 +62,7 @@ class SafeState extends ChangeNotifier {
   }
 
   void createSafe(Uint8List coverImageBytes, String password) {
-    _safe = const Safe();
+    _accounts = const [];
     _imageBytes = coverImageBytes;
     _masterPassword = password;
     _imagePath = null;
@@ -74,8 +80,10 @@ class SafeState extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final newImageBytes =
-          await SafeService.saveSafe(_imageBytes!, _safe, _masterPassword!);
+      final json = jsonEncode({'accounts': _accounts.map((a) => a.toJson()).toList()});
+      final plaintext = Uint8List.fromList(utf8.encode(json));
+      final encrypted = await CryptoService.encrypt(plaintext, _masterPassword!);
+      final newImageBytes = SteganographyService.embed(_imageBytes!, encrypted);
       await File(savePath).writeAsBytes(newImageBytes);
       _imagePath = savePath;
       _imageBytes = newImageBytes;
@@ -91,13 +99,8 @@ class SafeState extends ChangeNotifier {
     }
   }
 
-  Future<bool> saveSafe() async {
-    if (_imagePath == null) return false;
-    return saveToPath(_imagePath!);
-  }
-
   void lockSafe() {
-    _safe = const Safe();
+    _accounts = const [];
     _masterPassword = null;
     _imageBytes = null;
     _imagePath = null;
@@ -113,23 +116,19 @@ class SafeState extends ChangeNotifier {
   }
 
   void addAccount(Account account) {
-    _safe = _safe.copyWith(accounts: [..._safe.accounts, account]);
+    _accounts = [..._accounts, account];
     _isDirty = true;
     notifyListeners();
   }
 
   void updateAccount(Account updated) {
-    final accounts = _safe.accounts
-        .map((a) => a.id == updated.id ? updated : a)
-        .toList();
-    _safe = _safe.copyWith(accounts: accounts);
+    _accounts = _accounts.map((a) => a.id == updated.id ? updated : a).toList();
     _isDirty = true;
     notifyListeners();
   }
 
   void deleteAccount(String id) {
-    _safe = _safe.copyWith(
-        accounts: _safe.accounts.where((a) => a.id != id).toList());
+    _accounts = _accounts.where((a) => a.id != id).toList();
     _isDirty = true;
     notifyListeners();
   }
