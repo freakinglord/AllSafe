@@ -1,0 +1,6 @@
+name: Manual Workflow Example
+
+on:
+  workflow_dispatch: # Enables the manual "Run workflow" button
+  push:
+    branches: [ develop-1.0 ] # You can still keep other triggers
