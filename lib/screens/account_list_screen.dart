@@ -1,5 +1,7 @@
+import 'dart:io' show Platform;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import '../models/account.dart';
 import '../state/safe_state.dart';
@@ -73,8 +75,8 @@ class _AccountListScreenState extends State<AccountListScreen> {
               icon: Icon(
                 Icons.save_outlined,
                 color: state.isDirty
-                    ? const Color(0xFF4A79C4)
-                    : const Color(0xFF333333),
+                    ? Theme.of(context).colorScheme.primary
+                    : null,
               ),
               tooltip: 'Save Safe',
               onPressed: state.isDirty ? () => _saveSafe(context) : null,
@@ -153,14 +155,20 @@ class _AccountListScreenState extends State<AccountListScreen> {
 
     if (state.needsSavePath) {
       // New safe — ask where to save the stego image
-      String? savePath = await FilePicker.platform.saveFile(
-        dialogTitle: 'Save Safe Image As',
-        fileName: 'safe.png',
-        type: FileType.custom,
-        allowedExtensions: ['png'],
-      );
-      if (savePath == null) return;
-      if (!savePath.endsWith('.png')) savePath = '$savePath.png';
+      String? savePath;
+      if (Platform.isIOS) {
+        final dir = await getApplicationDocumentsDirectory();
+        savePath = '${dir.path}/safe.png';
+      } else {
+        savePath = await FilePicker.platform.saveFile(
+          dialogTitle: 'Save Safe Image As',
+          fileName: 'safe.png',
+          type: FileType.custom,
+          allowedExtensions: ['png'],
+        );
+        if (savePath == null) return;
+        if (!savePath.endsWith('.png')) savePath = '$savePath.png';
+      }
 
       final ok = await state.saveToPath(savePath);
       if (!context.mounted) return;
@@ -189,7 +197,7 @@ class _AccountListScreenState extends State<AccountListScreen> {
             ElevatedButton(
               onPressed: () => Navigator.pop(ctx, true),
               style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFFF453A),
+                  backgroundColor: Theme.of(ctx).colorScheme.error,
                   foregroundColor: Colors.white),
               child: const Text('Lock & Discard'),
             ),
@@ -228,8 +236,8 @@ class _AccountTile extends StatelessWidget {
         backgroundColor: const Color(0xFF1A1A1A),
         child: Text(
           initial,
-          style: const TextStyle(
-            color: Color(0xFF4A79C4),
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.primary,
             fontWeight: FontWeight.bold,
             fontSize: 14,
           ),

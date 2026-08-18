@@ -108,6 +108,14 @@ flutter pub get
 flutter run -d linux     # or -d macos / -d windows
 ```
 
+### Run on iOS Simulator
+
+```bash
+open -a Simulator        # launch the simulator if not already open
+flutter devices          # list available devices
+flutter run -d "iPhone 16"  # replace with your device name from the list above
+```
+
 ### Build a release binary
 
 ```bash

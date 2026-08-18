@@ -47,7 +47,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.delete_outline, color: Color(0xFFFF453A)),
+            icon: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.error),
             tooltip: 'Delete',
             onPressed: () => _confirmDelete(context, account),
           ),
@@ -102,7 +102,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
           ElevatedButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFFF453A),
+                backgroundColor: Theme.of(ctx).colorScheme.error,
                 foregroundColor: Colors.white),
             child: const Text('Delete'),
           ),

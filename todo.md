@@ -9,10 +9,10 @@
 
 # Release2 — iOS Compatibility
 
-- [ ] Uncomment `platform :ios, '12.0'` in `ios/Podfile`
-- [ ] Add `path_provider` dependency to `pubspec.yaml` (needed for iOS Documents directory)
-- [ ] Replace `FilePicker.platform.saveFile()` in `lib/screens/account_list_screen.dart` — not supported on iOS; save to app Documents dir instead
-- [ ] Fix write-back path in `lib/state/safe_state.dart` — iOS file picker returns a temp path; save to Documents dir, not back to the temp picker path
+- [x] Uncomment `platform :ios, '12.0'` in `ios/Podfile`
+- [x] Add `path_provider` dependency to `pubspec.yaml` (needed for iOS Documents directory)
+- [x] Replace `FilePicker.platform.saveFile()` in `lib/screens/account_list_screen.dart` — not supported on iOS; save to app Documents dir instead
+- [x] Fix write-back path in `lib/state/safe_state.dart` — iOS file picker returns a temp path; save to Documents dir, not back to the temp picker path
 
 ---
 

@@ -61,11 +61,11 @@ class SafeState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void createSafe(Uint8List coverImageBytes, String password) {
+  void createSafe(Uint8List coverImageBytes, String password, {String? imagePath}) {
     _accounts = const [];
     _imageBytes = coverImageBytes;
     _masterPassword = password;
-    _imagePath = null;
+    _imagePath = imagePath;
     _status = SafeStatus.unlocked;
     _isDirty = true;
     _error = null;

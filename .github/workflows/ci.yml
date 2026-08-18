@@ -92,3 +92,31 @@ jobs:
           name: allsafe-macos
           path: build/macos/Build/Products/Release/
           retention-days: 14
+
+  # ── Build iOS ───────────────────────────────────────────────────────────────
+  build-ios:
+    name: Build (iOS)
+    runs-on: macos-latest
+    needs: analyze-and-test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.x'
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build iOS
+        run: flutter build ios --release --no-codesign
+
+      - name: Upload iOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: allsafe-ios
+          path: build/ios/iphoneos/Runner.app
+          retention-days: 14
