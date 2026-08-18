@@ -1,6 +1,28 @@
-name: Manual Workflow Example
+name: CI
 
 on:
-  workflow_dispatch: # Enables the manual "Run workflow" button
+  workflow_dispatch:
   push:
-    branches: [ develop-1.0 ] # You can still keep other triggers
+    branches: [ develop-1.0 ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter pub get
+      - run: flutter test
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter pub get
+      - run: flutter build apk --release
