@@ -54,13 +54,13 @@ class HomeScreen extends StatelessWidget {
 
               // Actions
               ElevatedButton.icon(
-                onPressed: () => _openSafe(context),
+                onPressed: () => _pick(context, UnlockMode.open),
                 icon: const Icon(Icons.folder_open_outlined, size: 18),
                 label: const Text('OPEN SAFE'),
               ),
               const SizedBox(height: 14),
               OutlinedButton.icon(
-                onPressed: () => _createSafe(context),
+                onPressed: () => _pick(context, UnlockMode.create),
                 icon: const Icon(Icons.add, size: 18),
                 label: const Text('CREATE NEW SAFE'),
               ),
@@ -83,9 +83,9 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _openSafe(BuildContext context) async {
+  Future<void> _pick(BuildContext context, UnlockMode mode) async {
     final result = await FilePicker.platform.pickFiles(
-      dialogTitle: 'Select Safe Image',
+      dialogTitle: mode == UnlockMode.open ? 'Select Safe Image' : 'Select Cover Image (PNG)',
       type: FileType.custom,
       allowedExtensions: ['png'],
       withData: true,
@@ -96,45 +96,13 @@ class HomeScreen extends StatelessWidget {
     final path = file.path;
     final bytes =
         file.bytes ?? (path != null ? await File(path).readAsBytes() : null);
-    if (bytes == null || path == null) return;
+    if (bytes == null || (mode == UnlockMode.open && path == null)) return;
     if (!context.mounted) return;
 
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => UnlockScreen(
-          mode: UnlockMode.open,
-          imagePath: path,
-          imageBytes: bytes,
-        ),
-      ),
-    );
-  }
-
-  Future<void> _createSafe(BuildContext context) async {
-    final result = await FilePicker.platform.pickFiles(
-      dialogTitle: 'Select Cover Image (PNG)',
-      type: FileType.custom,
-      allowedExtensions: ['png'],
-      withData: true,
-    );
-    if (result == null || result.files.isEmpty) return;
-
-    final file = result.files.first;
-    final path = file.path;
-    final bytes =
-        file.bytes ?? (path != null ? await File(path).readAsBytes() : null);
-    if (bytes == null) return;
-    if (!context.mounted) return;
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => UnlockScreen(
-          mode: UnlockMode.create,
-          imagePath: path,
-          imageBytes: bytes,
-        ),
+        builder: (_) => UnlockScreen(mode: mode, imagePath: path, imageBytes: bytes),
       ),
     );
   }
