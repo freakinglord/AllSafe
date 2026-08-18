@@ -42,7 +42,7 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 6),
               Text(
-                'ENCRYPT · HIDE · RETRIEVE',
+                'HIDE IN PLAIN SIGHT',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onSurface.withAlpha(100),
