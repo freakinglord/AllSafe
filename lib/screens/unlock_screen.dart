@@ -68,8 +68,8 @@ class _UnlockScreenState extends State<UnlockScreen> {
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.image_outlined,
-                            color: Color(0xFF4A79C4), size: 15),
+                        Icon(Icons.image_outlined,
+                            color: Theme.of(context).colorScheme.primary, size: 15),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
@@ -120,8 +120,8 @@ class _UnlockScreenState extends State<UnlockScreen> {
                     padding: const EdgeInsets.only(top: 14),
                     child: Text(
                       error,
-                      style: const TextStyle(
-                          color: Color(0xFFFF453A), fontSize: 13),
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.error, fontSize: 13),
                     ),
                   ),
 
@@ -162,7 +162,7 @@ class _UnlockScreenState extends State<UnlockScreen> {
     bool success;
 
     if (_isCreate) {
-      state.createSafe(widget.imageBytes, _passwordCtrl.text);
+      state.createSafe(widget.imageBytes, _passwordCtrl.text, imagePath: widget.imagePath);
       success = true;
     } else {
       await state.openSafe(

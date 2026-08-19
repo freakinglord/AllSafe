@@ -61,6 +61,12 @@ void main() {
     expect(state.isUnlocked, isTrue);
   });
 
+  test('createSafe with imagePath sets needsSavePath = false (iOS pre-determined path)', () {
+    state.createSafe(_tiny, _pw, imagePath: '/docs/safe.png');
+    expect(state.needsSavePath, isFalse);
+    expect(state.imagePath, '/docs/safe.png');
+  });
+
   test('needsSavePath is true after createSafe, false after saveToPath', () async {
     final png = _makePng(200, 200);
     state.createSafe(png, _pw);
