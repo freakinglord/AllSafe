@@ -43,5 +43,14 @@ void main() {
       expect(() => SteganographyService.extract(jpeg),
           throwsA(isA<SteganographyException>()));
     });
+
+    test('embed on already-embedded image overwrites; extract returns new payload', () {
+      final png = _makePng(100, 100);
+      final first = Uint8List.fromList([1, 2, 3]);
+      final second = Uint8List.fromList([4, 5, 6, 7]);
+      final withFirst = SteganographyService.embed(png, first);
+      final withSecond = SteganographyService.embed(withFirst, second);
+      expect(SteganographyService.extract(withSecond), equals(second));
+    });
   });
 }

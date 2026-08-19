@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../services/steganography_service.dart';
 import '../state/safe_state.dart';
 import 'unlock_screen.dart';
 
@@ -98,6 +99,39 @@ class HomeScreen extends StatelessWidget {
         file.bytes ?? (path != null ? await File(path).readAsBytes() : null);
     if (bytes == null || (mode == UnlockMode.open && path == null)) return;
     if (!context.mounted) return;
+
+    if (mode == UnlockMode.create) {
+      bool alreadyHasSafe = false;
+      try {
+        SteganographyService.extract(bytes);
+        alreadyHasSafe = true;
+      } catch (_) {}
+
+      if (alreadyHasSafe) {
+        if (!context.mounted) return;
+        final confirmed = await showDialog<bool>(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text('Safe Already Exists'),
+            content: const Text(
+              'This image already contains a safe. '
+              'Creating a new safe will overwrite all existing data.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('CANCEL'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('OVERWRITE'),
+              ),
+            ],
+          ),
+        );
+        if (confirmed != true) return;
+      }
+    }
 
     Navigator.push(
       context,
